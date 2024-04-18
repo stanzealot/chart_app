@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
+
+final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
 class NewMetric extends StatefulWidget {
   const NewMetric({required this.onAddMetric, super.key});
@@ -78,9 +81,7 @@ class _NewMetricState extends State<NewMetric> {
     final enteredAmount = double.tryParse(_amountController
         .text); //tryParse('hello')=> null, tryParse('1.12') => 1.12
     final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
+    if (amountIsInvalid || _selectedDate == null) {
       _showDialog();
       return;
     }
@@ -101,7 +102,8 @@ class _NewMetricState extends State<NewMetric> {
         Uri.parse('${Constants.uri}/api/create'),
         body: json.encode({
           'quantity': _amountController.text,
-          'date': "2024-04-15",
+          'date':
+              _selectedDate != null ? dateFormat.format(_selectedDate!) : '',
           'category': _selectedCategory.name,
         }),
         headers: <String, String>{
@@ -144,42 +146,30 @@ class _NewMetricState extends State<NewMetric> {
             padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
             child: Column(
               children: [
-                if (width >= 600)
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _titleController,
-                          maxLength: 50,
-                          decoration: const InputDecoration(
-                            label: Text("Title"),
+                const SizedBox(
+                  height: 50,
+                ),
+                DropdownButton(
+                  value: _selectedCategory,
+                  items: Category.values
+                      .map(
+                        (category) => DropdownMenuItem(
+                          value: category,
+                          child: Text(
+                            category.name.toUpperCase(),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _amountController,
-                          maxLength: 50,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            prefixText: '\$ ',
-                            label: Text("Amount"),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                else
-                  TextField(
-                    controller: _titleController,
-                    maxLength: 50,
-                    decoration: const InputDecoration(
-                      label: Text("Title"),
-                    ),
-                  ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  },
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -218,28 +208,7 @@ class _NewMetricState extends State<NewMetric> {
                 ),
                 Row(
                   children: [
-                    DropdownButton(
-                      value: _selectedCategory,
-                      items: Category.values
-                          .map(
-                            (category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(
-                                category.name.toUpperCase(),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        if (value == null) {
-                          return;
-                        }
-                        setState(() {
-                          _selectedCategory = value;
-                        });
-                      },
-                    ),
-                    const Spacer(),
+                    // const Spacer(),
                     TextButton(onPressed: () {}, child: const Text('Cancel')),
                     const SizedBox(
                       width: 20,
