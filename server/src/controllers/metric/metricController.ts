@@ -98,7 +98,8 @@ export default class MetricController {
 
     protected async delete(req: Request, res: Response, next: NextFunction): Promise<Response> {
       try {
-        let id = req.body.id;
+        let {id} = req.params;
+        console.log('reached here')
         const record = await MetricInstance.findOne({where: {id}})
        if(!record){
           return res.status(404).json({

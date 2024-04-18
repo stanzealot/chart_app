@@ -181,9 +181,16 @@ class _NewMetricState extends State<NewMetric> {
                         controller: _amountController,
                         maxLength: 50,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          prefixText: '\$ ',
-                          label: Text("Amount"),
+                        decoration: InputDecoration(
+                          prefixText: _selectedCategory == Category.steps
+                              ? ''
+                              : _selectedCategory == Category.waterIntake
+                                  ? '(ml)  '
+                                  : _selectedCategory ==
+                                          Category.calorieConsumption
+                                      ? '(kcal)  '
+                                      : '',
+                          label: Text("Quantity"),
                         ),
                       ),
                     ),

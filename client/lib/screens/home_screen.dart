@@ -54,12 +54,70 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _removeMetric(Metric metric) {
+  void _removeMetric(Metric metric) async {
     final metricIndex = _registeredMetrics.indexOf(metric);
 
     setState(() {
       _registeredMetrics.remove(metric);
     });
+
+    try {
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+      final Uri uri = Uri.parse('${Constants.uri}/api/delete/${metric.id}');
+      final response = await http.delete(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+      );
+
+      // Check if the request was successful (status code 200)
+      if (response.statusCode == 200) {
+        // clear info message first before adding another
+        ScaffoldMessenger.of(context).clearSnackBars();
+        // adding an info message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 3),
+            content: const Text('Metric Deleted'),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                setState(
+                  () {
+                    _registeredMetrics.insert(metricIndex, metric);
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      } else {
+        // Show error message if the request was not successful
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete metric. Please try again later.'),
+          ),
+        );
+      }
+
+      print(response.body);
+    } catch (error) {
+      // Handle any errors that occur during the HTTP request
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred while deleting the metric.'),
+        ),
+      );
+    }
 
     // clear info message first before adding another
     ScaffoldMessenger.of(context).clearSnackBars();

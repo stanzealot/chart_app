@@ -14,6 +14,8 @@ class MetricRoutes extends MetricController{
     private routes(): void {
         this.router.route('/').get(this.index);
         this.router.route('/create').post(this.create);
+        this.router.route('/delete/:id').delete(this.delete);
+        
     }
 }
 export default new MetricRoutes().router;
