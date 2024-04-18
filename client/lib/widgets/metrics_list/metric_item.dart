@@ -18,7 +18,7 @@ class MetricItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              metric.title,
+              metric.categoryName,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(

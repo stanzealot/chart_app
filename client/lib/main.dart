@@ -1,8 +1,8 @@
 import 'package:chart_app/providers/user_provider.dart';
 import 'package:chart_app/screens/auth.dart';
+import 'package:chart_app/screens/home_screen.dart';
 import 'package:chart_app/screens/signup_screen.dart';
 import 'package:chart_app/services/auth_services.dart';
-import 'package:chart_app/widgets/metrics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Provider.of<UserProvider>(context).user.token.isEmpty
           ? const SignupScreen()
-          : const Metrics(),
+          : const HomeScreen(),
     );
   }
 }

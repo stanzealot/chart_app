@@ -117,7 +117,7 @@ class _NewMetricState extends State<NewMetric> {
 
     widget.onAddMetric(
       Metric(
-          title: _titleController.text,
+          id: _titleController.text,
           amount: enteredAmount,
           date: _selectedDate!,
           category: _selectedCategory),

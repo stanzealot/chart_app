@@ -8,6 +8,11 @@ const uuid = Uuid();
 // since we want to specify the cate
 enum Category { steps, waterIntake, calorieConsumption }
 
+const categoryNames = {
+  Category.steps: 'Steps',
+  Category.waterIntake: 'Water Intake',
+  Category.calorieConsumption: 'Calorie Consumption',
+};
 const categoryIcons = {
   Category.steps: Icons.timeline_outlined,
   Category.waterIntake: Icons.water_drop_outlined,
@@ -17,19 +22,22 @@ const categoryIcons = {
 class Metric {
   // the id get initial once the class get
   Metric({
-    required this.title,
+    required this.id,
     required this.amount,
     required this.date,
     required this.category,
-  }) : id = uuid.v4();
+  });
   final String id;
-  final String title;
   final double amount;
   final DateTime date;
   final Category category;
 
   String get formattedDate {
     return formatter.format(date);
+  }
+
+  String get categoryName {
+    return categoryNames[category] ?? 'Unknown';
   }
 }
 

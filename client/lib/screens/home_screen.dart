@@ -35,20 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  List<Metric> _registeredMetrics = [
-    // Metric(
-    //   title: 'Flutter course',
-    //   amount: 19.99,
-    //   date: DateTime.now(),
-    //   category: Category.steps,
-    // ),
-    // Metric(
-    //   title: 'Flutter course',
-    //   amount: 19.99,
-    //   date: DateTime.now(),
-    //   category: Category.calorieConsumption,
-    // ),
-  ];
+  List<Metric> _registeredMetrics = [];
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
@@ -142,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _registeredMetrics = responseData.map((data) {
         return Metric(
-          title: data['category'],
+          id: data['id'],
           amount: double.parse(data['quantity']),
           date: DateTime.parse(data['date']),
           category: getCategoryFromString(data['category']) ?? Category.steps,
