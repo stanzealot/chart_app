@@ -127,6 +127,10 @@ class _NewMetricState extends State<NewMetric> {
     Navigator.pop(context);
   }
 
+  void _cancel() {
+    Navigator.pop(context);
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -209,7 +213,7 @@ class _NewMetricState extends State<NewMetric> {
                 Row(
                   children: [
                     // const Spacer(),
-                    TextButton(onPressed: () {}, child: const Text('Cancel')),
+                    TextButton(onPressed: _cancel, child: const Text('Cancel')),
                     const SizedBox(
                       width: 20,
                     ),
